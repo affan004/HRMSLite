@@ -1,0 +1,14 @@
+Backend/.venv/
+Backend/db.sqlite3
+Backend/test.sqlite3
+Backend/.vercel/
+Frontend/node_modules/
+Frontend/dist/
+Frontend/.vercel/
+__pycache__/
+*.py[cod]
+.env
+.env.local
+.DS_Store
+.coverage
+coverage/
