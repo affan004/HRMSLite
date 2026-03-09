@@ -10,6 +10,7 @@ const Attendance = () => {
   const [employees, setEmployees] = useState([]);
   const [attendance, setAttendance] = useState({});
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const [today, setToday] = useState(() => new Date());
   const [selectedDepartment, setSelectedDepartment] = useState(ALL_DEPARTMENTS);
   const [selectedStatus, setSelectedStatus] = useState('All Statuses');
   const [loading, setLoading] = useState(true);
@@ -17,7 +18,21 @@ const Attendance = () => {
   const [error, setError] = useState(null);
 
   const dateStr = format(selectedDate, 'yyyy-MM-dd');
-  const isToday = dateStr === format(new Date(), 'yyyy-MM-dd');
+  const todayStr = format(today, 'yyyy-MM-dd');
+  const isToday = dateStr === todayStr;
+  const canMoveForward = dateStr < todayStr;
+
+  useEffect(() => {
+    const now = new Date();
+    const nextMidnight = new Date(now);
+    nextMidnight.setHours(24, 0, 0, 0);
+
+    const timerId = window.setTimeout(() => {
+      setToday(new Date());
+    }, nextMidnight.getTime() - now.getTime() + 1000);
+
+    return () => window.clearTimeout(timerId);
+  }, [todayStr]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -62,7 +77,15 @@ const Attendance = () => {
 
   const handleCalendarChange = (event) => {
     if (!event.target.value) return;
-    setSelectedDate(new Date(`${event.target.value}T00:00:00`));
+    const nextDate = event.target.value > todayStr ? todayStr : event.target.value;
+    setSelectedDate(new Date(`${nextDate}T00:00:00`));
+  };
+
+  const handleNextDay = () => {
+    setSelectedDate((date) => {
+      const nextDate = addDays(date, 1);
+      return format(nextDate, 'yyyy-MM-dd') > todayStr ? date : nextDate;
+    });
   };
 
   const filteredEmployees = employees.filter((employee) => {
@@ -131,6 +154,7 @@ const Attendance = () => {
               type="date"
               className="date-picker-input"
               value={dateStr}
+              max={todayStr}
               onChange={handleCalendarChange}
             />
           </div>
@@ -144,7 +168,7 @@ const Attendance = () => {
               <Calendar size={15} color="var(--primary)" />
               <span className="date-label">{isToday ? 'Today' : format(selectedDate, 'MMM d, yyyy')}</span>
             </div>
-            <button type="button" className="date-nav-btn" onClick={() => setSelectedDate((date) => addDays(date, 1))}>
+            <button type="button" className="date-nav-btn" onClick={handleNextDay} disabled={!canMoveForward}>
               <ChevronRight size={18} />
             </button>
           </div>

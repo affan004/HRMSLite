@@ -1292,9 +1292,14 @@ tbody tr:hover td {
   transition: var(--transition);
 }
 
-.date-nav-btn:hover {
+.date-nav-btn:not(:disabled):hover {
   background: rgba(15, 118, 110, 0.08);
   color: var(--primary-dark);
+}
+
+.date-nav-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.42;
 }
 
 .date-label {
