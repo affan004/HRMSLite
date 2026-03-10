@@ -111,16 +111,3 @@ python manage.py test
 python manage.py check
 ```
 
-## Assumptions and limitations
-
-- The system assumes a single admin user; authentication is intentionally out of scope
-- Attendance is managed per employee per date with two statuses only: Present and Absent
-- There is no leave, payroll, or role-based access management
-- The attendance screen is date-based rather than a separate per-employee history page
-- Vercel is used for deployment, so backend configuration is environment-variable driven
-
-## Submission checklist
-
-- Public live application URL: included above
-- Public GitHub repository: included above
-- README with overview, stack, local setup, and assumptions/limitations: included here
