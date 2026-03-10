@@ -197,14 +197,6 @@ const Attendance = () => {
             <h3>No employees found</h3>
             <p>Add employees first to mark attendance.</p>
           </div>
-        ) : filteredEmployees.length === 0 ? (
-          <div className="empty-state">
-            <div className="empty-state-icon">
-              <CalendarCheck2 size={28} />
-            </div>
-            <h3>No employees match the selected filters</h3>
-            <p>Try a different department, status, or date combination.</p>
-          </div>
         ) : (
           <>
             <div className="filter-toolbar">
@@ -242,78 +234,88 @@ const Attendance = () => {
               </div>
             </div>
 
-            <div className="table-scroll">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Employee</th>
-                    <th>Employee ID</th>
-                    <th>Department</th>
-                    <th>Status</th>
-                    <th style={{ textAlign: 'right' }}>Mark</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredEmployees.map((emp) => {
-                    const status = attendance[emp.employee_id];
-                    const isMarking = marking !== null;
+            {filteredEmployees.length === 0 ? (
+              <div className="empty-state">
+                <div className="empty-state-icon">
+                  <CalendarCheck2 size={28} />
+                </div>
+                <h3>No employees match the selected filters</h3>
+                <p>Try a different department, status, or date combination.</p>
+              </div>
+            ) : (
+              <div className="table-scroll">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Employee</th>
+                      <th>Employee ID</th>
+                      <th>Department</th>
+                      <th>Status</th>
+                      <th style={{ textAlign: 'right' }}>Mark</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredEmployees.map((emp) => {
+                      const status = attendance[emp.employee_id];
+                      const isMarking = marking !== null;
 
-                    return (
-                      <tr key={emp.id}>
-                        <td>
-                          <div className="name-cell">
-                            <div className="avatar-pill">{getInitials(emp.full_name)}</div>
-                            <div>
-                              <div className="name-primary">{emp.full_name}</div>
-                              <div className="name-secondary">{emp.email}</div>
+                      return (
+                        <tr key={emp.id}>
+                          <td>
+                            <div className="name-cell">
+                              <div className="avatar-pill">{getInitials(emp.full_name)}</div>
+                              <div>
+                                <div className="name-primary">{emp.full_name}</div>
+                                <div className="name-secondary">{emp.email}</div>
+                              </div>
                             </div>
-                          </div>
-                        </td>
-                        <td>
-                          <span className="mono-chip">{emp.employee_id}</span>
-                        </td>
-                        <td>
-                          <span className="dept-chip">{emp.department}</span>
-                        </td>
-                        <td>
-                          {status === 'Present' && (
-                            <span className="badge badge-present">
-                              <CheckCircle size={11} /> Present
-                            </span>
-                          )}
-                          {status === 'Absent' && (
-                            <span className="badge badge-absent">
-                              <XCircle size={11} /> Absent
-                            </span>
-                          )}
-                          {!status && <span className="badge badge-not-marked">Not marked</span>}
-                        </td>
-                        <td style={{ textAlign: 'right' }}>
-                          <div className="mark-actions">
-                            <button
-                              type="button"
-                              className={`att-btn ${status === 'Present' ? 'present-filled' : 'present-outline'}`}
-                              onClick={() => markStatus(emp.employee_id, 'Present')}
-                              disabled={isMarking}
-                            >
-                              <CheckCircle size={13} /> Present
-                            </button>
-                            <button
-                              type="button"
-                              className={`att-btn ${status === 'Absent' ? 'absent-filled' : 'absent-outline'}`}
-                              onClick={() => markStatus(emp.employee_id, 'Absent')}
-                              disabled={isMarking}
-                            >
-                              <XCircle size={13} /> Absent
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
+                          </td>
+                          <td>
+                            <span className="mono-chip">{emp.employee_id}</span>
+                          </td>
+                          <td>
+                            <span className="dept-chip">{emp.department}</span>
+                          </td>
+                          <td>
+                            {status === 'Present' && (
+                              <span className="badge badge-present">
+                                <CheckCircle size={11} /> Present
+                              </span>
+                            )}
+                            {status === 'Absent' && (
+                              <span className="badge badge-absent">
+                                <XCircle size={11} /> Absent
+                              </span>
+                            )}
+                            {!status && <span className="badge badge-not-marked">Not marked</span>}
+                          </td>
+                          <td style={{ textAlign: 'right' }}>
+                            <div className="mark-actions">
+                              <button
+                                type="button"
+                                className={`att-btn ${status === 'Present' ? 'present-filled' : 'present-outline'}`}
+                                onClick={() => markStatus(emp.employee_id, 'Present')}
+                                disabled={isMarking}
+                              >
+                                <CheckCircle size={13} /> Present
+                              </button>
+                              <button
+                                type="button"
+                                className={`att-btn ${status === 'Absent' ? 'absent-filled' : 'absent-outline'}`}
+                                onClick={() => markStatus(emp.employee_id, 'Absent')}
+                                disabled={isMarking}
+                              >
+                                <XCircle size={13} /> Absent
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </>
         )}
       </section>
